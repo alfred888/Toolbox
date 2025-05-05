@@ -97,12 +97,37 @@ def process_directory(directory='.'):
         # 保存结果
         save_to_txt(dialogues, output_path)
 
+def get_input_path():
+    """获取用户输入的路径"""
+    while True:
+        path = input("请输入ASS文件所在目录的绝对路径（直接回车使用当前目录）: ").strip()
+        if not path:  # 如果用户直接回车
+            return '.'
+        
+        # 处理路径中的转义字符
+        path = path.replace('\\', '')
+        
+        # 检查路径是否存在
+        if not os.path.exists(path):
+            print(f"错误：输入的路径不存在: {path}")
+            continue
+        
+        # 检查是否是目录
+        if not os.path.isdir(path):
+            print(f"错误：输入的路径不是目录: {path}")
+            continue
+        
+        return path
+
 if __name__ == '__main__':
     print("=== ASS字幕提取工具 ===")
-    print("将自动处理当前目录下所有.ass文件")
-    input("按Enter键开始...")
+    print("将处理指定目录下所有.ass文件")
     
-    process_directory()
+    # 获取用户输入的路径
+    directory = get_input_path()
+    
+    # 处理文件
+    process_directory(directory)
     
     print("\n处理完成!")
     input("按Enter键退出...")
