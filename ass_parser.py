@@ -10,16 +10,25 @@ def parse_ass_file(ass_path):
     dialogues = []
     chinese_pattern = re.compile(r'[\u4e00-\u9fff]+')  # 中文字符正则
     
-    try:
-        with open(ass_path, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-    except UnicodeDecodeError:
+    # 尝试不同的编码方式读取文件
+    encodings = ['utf-8', 'utf-8-sig', 'gbk', 'gb2312', 'big5', 'utf-16']
+    lines = None
+    
+    for encoding in encodings:
         try:
-            with open(ass_path, 'r', encoding='gbk') as f:
+            with open(ass_path, 'r', encoding=encoding) as f:
                 lines = f.readlines()
+                print(f"成功使用 {encoding} 编码读取文件")
+                break
+        except UnicodeDecodeError:
+            continue
         except Exception as e:
-            print(f"无法读取文件 {ass_path}: {e}")
+            print(f"读取文件时出错: {e}")
             return dialogues
+    
+    if lines is None:
+        print(f"错误：无法使用任何支持的编码读取文件 {ass_path}")
+        return dialogues
     
     # 找到事件部分开始的位置
     events_start = False
