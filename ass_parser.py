@@ -77,7 +77,7 @@ def save_to_txt(dialogues, output_path):
     """将提取的对话保存到文本文件"""
     with open(output_path, 'w', encoding='utf-8') as f:
         for i, (en, zh) in enumerate(dialogues, start=1):
-            f.write(f"{i}. {en} -- {zh}\n")
+            f.write(f"{i}. {en} - {zh}\n")
     print(f"已保存: {output_path}")
 
 def process_directory(directory='.'):
